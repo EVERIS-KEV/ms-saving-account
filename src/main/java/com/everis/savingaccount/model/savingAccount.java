@@ -24,11 +24,17 @@ public class savingAccount {
   private String dateCreated = new Date().toString();
   private double amount = 0.0;
   private List<movements> movements = new ArrayList<movements>();
+  private String perfil;
 
   @NotBlank(message = "Debe seleccionar un cliente.")
   private String idCustomer;
 
   public savingAccount(String idCustomer) {
+    this.idCustomer = idCustomer;
+  } 
+
+  public savingAccount(String perfil, String idCustomer) {
+    this.perfil = perfil;
     this.idCustomer = idCustomer;
   }
 }
