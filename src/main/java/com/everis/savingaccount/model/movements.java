@@ -8,20 +8,31 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class movements {
-  private String date = new Date().toString();
-
-  @NotBlank(message = "Debe seleccionar un numero de cuenta.")
-  private String accountNumber;
-
+  private Date dateCreated = new Date();  
   @NotBlank(message = "Debe seleccionar un typo de movimiento.")
-  private String type;
-
+  private String type; 
   @Min(10)
-  private double amount;
+  private double amount; 
+  @NotBlank(message = "Debe seleccionar un numero de cuenta.")
+  private String accountEmisor; 
+  private String accountRecep;
 
-  private movements(String accountNumber, String type, double amount) {
+  public movements(String accountEmisor, String type, double amount) {
     this.type = type;
     this.amount = amount;
-    this.accountNumber = accountNumber;
+    this.accountEmisor = accountEmisor;
+    this.accountRecep = "";
+  }
+
+  public movements(
+    String accountEmisor,
+    String type,
+    double amount,
+    String accountRecep
+  ) {
+    this.type = type;
+    this.amount = amount;
+    this.accountEmisor = accountEmisor;
+    this.accountRecep = accountRecep;
   }
 }
