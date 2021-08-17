@@ -6,6 +6,7 @@ import com.everis.savingaccount.map.customer;
 import com.everis.savingaccount.model.*;
 import com.everis.savingaccount.repository.savingAccountRepository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -192,7 +193,7 @@ public class savingAccountService {
 
     if (movementcant < LIMIT_MOVEMENT) {  
       if (repository.existsByAccountNumber(model.getAccountEmisor())) {
-    	  if (!operations.stream().filter( c -> c.equals( model.getType() ) ).toList().isEmpty()) {
+    	  if ( model.getType().equals("Retiro") || model.getType().equals("Deposito") || model.getType().equals("Trasnferencia") ) {
           msg = addMovements(model);
           addComisionById(idaccount);
         } else msg = "Selecione una operacion correcta.";
@@ -214,9 +215,18 @@ public class savingAccountService {
 	  return Mono.just(repository.existsByAccountNumber(number));
   }
 
-  public Flux<Object> getByCustomer(String id) {
-    return Flux.fromIterable(
-      repository.findAll().stream().filter(c -> c.getIdCustomer().equals(id)).toList()
-    );
+public Flux<Object> getByCustomer(String id) {
+	  
+	  List<savingAccount> lista = repository.findAll();
+	  List<savingAccount> listb = new ArrayList<savingAccount>();
+	  
+	  for (int i = 0; i < lista.size(); i++) {
+		  if( lista.get(i).getIdCustomer().equals(id) ) {
+			  listb.add(lista.get(i));
+		  }
+	  }
+	  
+	  	  
+    return Flux.fromIterable(listb);
   }
 }
