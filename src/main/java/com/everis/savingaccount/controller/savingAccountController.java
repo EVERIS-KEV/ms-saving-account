@@ -34,8 +34,9 @@ public class savingAccountController {
 		String msg = "";
 
 		if (bindinResult.hasErrors()) {
-			for (int i = 0; i < bindinResult.getAllErrors().size(); i++)
+			for (int i = 0; i < bindinResult.getAllErrors().size(); i++) {
 				msg = bindinResult.getAllErrors().get(0).getDefaultMessage();
+			}
 			return Mono.just(new message(msg));
 		}
 
@@ -47,8 +48,9 @@ public class savingAccountController {
 		String msg = "";
 
 		if (bindinResult.hasErrors()) {
-			for (int i = 0; i < bindinResult.getAllErrors().size(); i++)
+			for (int i = 0; i < bindinResult.getAllErrors().size(); i++) {
 				msg = bindinResult.getAllErrors().get(0).getDefaultMessage();
+			}
 			return Mono.just(new message(msg));
 		}
 
@@ -60,8 +62,9 @@ public class savingAccountController {
 		String msg = "";
 
 		if (bindinResult.hasErrors()) {
-			for (int i = 0; i < bindinResult.getAllErrors().size(); i++)
+			for (int i = 0; i < bindinResult.getAllErrors().size(); i++) {
 				msg = bindinResult.getAllErrors().get(0).getDefaultMessage();
+			}
 			return Mono.just(new message(msg));
 		}
 

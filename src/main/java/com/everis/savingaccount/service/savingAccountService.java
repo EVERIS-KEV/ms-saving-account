@@ -51,14 +51,16 @@ public class savingAccountService {
 	}
 
 	private Boolean verifyCE(String number) {
-		if (verifyNumberCC(number) || verifyNumberSC(number) || verifyNumberFC(number))
+		if (verifyNumberCC(number) || verifyNumberSC(number) || verifyNumberFC(number)) {
 			return true;
+		}
 		return false;
 	}
 
 	private Boolean verifyCR(String number) {
-		if (verifyNumberCC(number) || verifyNumberSC(number) || verifyNumberFC(number))
+		if (verifyNumberCC(number) || verifyNumberSC(number) || verifyNumberFC(number)) {
 			return true;
+		}
 		return false;
 	}
 
@@ -72,36 +74,39 @@ public class savingAccountService {
 
 		if (movement.getType().equals("Deposito")) {
 			model.setAmount(movement.getAmount() + val);
-			model.getMovements().add(movement);
 		} else {
-			if (movement.getAmount() > val)
+			if (movement.getAmount() > val) {
 				return "Cantidad insuficiente.";
-			else {
+			} else {
 
-				if (movement.getType().equals("Trasnferencia") && movement.getAccountRecep() != null) {
+				if (movement.getType().equals("Trasnferencia") && (movement.getAccountRecep() != null)) {
 					if (verifyCR(movement.getAccountRecep())) {
-						if (verifyNumberCC(movement.getAccountRecep()))
+						if (verifyNumberCC(movement.getAccountRecep())) {
 							webclient.currentAccount.post().uri("/addTransfer")
-									.body(Mono.just(movement), movements.class).retrieve().bodyToMono(Object.class)
-									.subscribe();
+							.body(Mono.just(movement), movements.class).retrieve().bodyToMono(Object.class)
+							.subscribe();
+						}
 
-						if (verifyNumberSC(movement.getAccountRecep()))
+						if (verifyNumberSC(movement.getAccountRecep())) {
 							webclient.savingAccount.post().uri("/addTransfer")
-									.body(Mono.just(movement), movements.class).retrieve().bodyToMono(Object.class)
-									.subscribe();
+							.body(Mono.just(movement), movements.class).retrieve().bodyToMono(Object.class)
+							.subscribe();
+						}
 
-						if (verifyNumberFC(movement.getAccountRecep()))
+						if (verifyNumberFC(movement.getAccountRecep())) {
 							webclient.fixedAccount.post().uri("/addTransfer").body(Mono.just(movement), movements.class)
-									.retrieve().bodyToMono(Object.class).subscribe();
+							.retrieve().bodyToMono(Object.class).subscribe();
+						}
 
-					} else
+					} else {
 						return "Cuenta receptora no exciste.";
+					}
 				}
 
 				model.setAmount(val - movement.getAmount());
-				model.getMovements().add(movement);
 			}
 		}
+		model.getMovements().add(movement);
 
 		repository.save(model);
 		return "Movimiento realizado";
@@ -132,14 +137,17 @@ public class savingAccountService {
 			String typeCustomer = customerFind(model.getIdCustomer()).getType();
 
 			if (typeCustomer.equals("personal")) {
-				if (!repository.existsByIdCustomer(model.getIdCustomer()))
+				if (!repository.existsByIdCustomer(model.getIdCustomer())) {
 					repository.save(model);
-				else
+				} else {
 					msg = "Usted ya no puede tener mas cuentas de ahorro.";
-			} else
+				}
+			} else {
 				msg = "Las cuentas empresariales no deben tener cuentas de ahorro.";
-		} else
+			}
+		} else {
 			msg = "Cliente no registrado";
+		}
 
 		return Mono.just(new message(msg));
 	}
@@ -158,7 +166,7 @@ public class savingAccountService {
 	public Mono<Object> saveMovements(movements model) {
 		String msg = "Movimiento realizado";
 		String idaccount = repository.findByAccountNumber(model.getAccountEmisor()).getIdSavingAccount();
-		int movementcant = (int) repository.findByAccountNumber(model.getAccountEmisor()).getMovements().size();
+		int movementcant = repository.findByAccountNumber(model.getAccountEmisor()).getMovements().size();
 
 		if (movementcant < LIMIT_MOVEMENT) {
 			if (repository.existsByAccountNumber(model.getAccountEmisor())) {
@@ -166,12 +174,15 @@ public class savingAccountService {
 						.isEmpty()) {
 					msg = addMovements(model);
 					addComisionById(idaccount);
-				} else
+				} else {
 					msg = "Selecione una operacion correcta.";
-			} else
+				}
+			} else {
 				msg = "Numero de cuenta incorrecto.";
-		} else
+			}
+		} else {
 			msg = "Llego a su limite de movimientos.";
+		}
 
 		return Mono.just(new message(msg));
 	}
