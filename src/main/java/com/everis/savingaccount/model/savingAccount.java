@@ -1,8 +1,7 @@
 package com.everis.savingaccount.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*; 
+import java.time.*; 
 
 import javax.validation.constraints.NotBlank;
 
@@ -11,8 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.everis.savingaccount.consumer.webclient;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*; 
 
 @Getter
 @Setter
@@ -23,7 +21,7 @@ public class savingAccount {
 	private String accountNumber = webclient.logic.get().uri("/generatedNumberLong/12").retrieve()
 			.bodyToMono(String.class).block();
 
-	private Date dateCreated = new Date();
+	private LocalDateTime dateCreated = LocalDateTime.now(ZoneId.of("America/Lima"));
 	private double amount = 0.0;
 	private List<movements> movements = new ArrayList<movements>();
 	private String profile;

@@ -6,8 +6,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Transactional; 
 
+import com.everis.savingaccount.Constants.Constants;
 import com.everis.savingaccount.consumer.webclient;
 import com.everis.savingaccount.dto.message;
 import com.everis.savingaccount.map.customer;
@@ -50,13 +51,6 @@ public class savingAccountService {
 				.block();
 	}
 
-	private Boolean verifyCE(String number) {
-		if (verifyNumberCC(number) || verifyNumberSC(number) || verifyNumberFC(number)) {
-			return true;
-		}
-		return false;
-	}
-
 	private Boolean verifyCR(String number) {
 		if (verifyNumberCC(number) || verifyNumberSC(number) || verifyNumberFC(number)) {
 			return true;
@@ -76,30 +70,30 @@ public class savingAccountService {
 			model.setAmount(movement.getAmount() + val);
 		} else {
 			if (movement.getAmount() > val) {
-				return "Cantidad insuficiente.";
+				return Constants.Messages.AMOUNTH_INSUFFICIENT;
 			} else {
 
 				if (movement.getType().equals("Trasnferencia") && (movement.getAccountRecep() != null)) {
 					if (verifyCR(movement.getAccountRecep())) {
 						if (verifyNumberCC(movement.getAccountRecep())) {
 							webclient.currentAccount.post().uri("/addTransfer")
-							.body(Mono.just(movement), movements.class).retrieve().bodyToMono(Object.class)
-							.subscribe();
+									.body(Mono.just(movement), movements.class).retrieve().bodyToMono(Object.class)
+									.subscribe();
 						}
 
 						if (verifyNumberSC(movement.getAccountRecep())) {
 							webclient.savingAccount.post().uri("/addTransfer")
-							.body(Mono.just(movement), movements.class).retrieve().bodyToMono(Object.class)
-							.subscribe();
+									.body(Mono.just(movement), movements.class).retrieve().bodyToMono(Object.class)
+									.subscribe();
 						}
 
 						if (verifyNumberFC(movement.getAccountRecep())) {
 							webclient.fixedAccount.post().uri("/addTransfer").body(Mono.just(movement), movements.class)
-							.retrieve().bodyToMono(Object.class).subscribe();
+									.retrieve().bodyToMono(Object.class).subscribe();
 						}
 
 					} else {
-						return "Cuenta receptora no exciste.";
+						return Constants.Messages.INCORRECT_DATA;
 					}
 				}
 
@@ -140,13 +134,13 @@ public class savingAccountService {
 				if (!repository.existsByIdCustomer(model.getIdCustomer())) {
 					repository.save(model);
 				} else {
-					msg = "Usted ya no puede tener mas cuentas de ahorro.";
+					msg = Constants.Messages.CLIENT_NO_MORE_ACCOUNT;
 				}
 			} else {
-				msg = "Las cuentas empresariales no deben tener cuentas de ahorro.";
+				msg = Constants.Messages.CLIENTEMP_NO_MORE_ACCOUNT;
 			}
 		} else {
-			msg = "Cliente no registrado";
+			msg = Constants.Messages.ACCOUNT_REGISTERED;
 		}
 
 		return Mono.just(new message(msg));
@@ -175,13 +169,13 @@ public class savingAccountService {
 					msg = addMovements(model);
 					addComisionById(idaccount);
 				} else {
-					msg = "Selecione una operacion correcta.";
+					msg = Constants.Messages.INCORRECT_OPERATION;
 				}
 			} else {
-				msg = "Numero de cuenta incorrecto.";
+				msg = Constants.Messages.INCORRECT_OPERATION;
 			}
 		} else {
-			msg = "Llego a su limite de movimientos.";
+			msg = Constants.Messages.LIMIT_MOVEMENT;
 		}
 
 		return Mono.just(new message(msg));

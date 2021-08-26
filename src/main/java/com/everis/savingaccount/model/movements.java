@@ -1,19 +1,15 @@
 package com.everis.savingaccount.model;
 
-import java.util.Date;
-
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.time.*; 
+ 
+import javax.validation.constraints.*; 
+import lombok.*; 
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class movements {
-	private Date dateCreated = new Date();
+	private LocalDateTime dateCreated = LocalDateTime.now( ZoneId.of("America/Lima") );
 	@NotBlank(message = "Debe seleccionar un typo de movimiento.")
 	private String type;
 	@Min(10)
@@ -26,7 +22,7 @@ public class movements {
 		this.type = type;
 		this.amount = amount;
 		this.accountEmisor = accountEmisor;
-		this.accountRecep = "";
+		this.accountRecep = null;
 	}
 
 	public movements(String accountEmisor, String type, double amount, String accountRecep) {

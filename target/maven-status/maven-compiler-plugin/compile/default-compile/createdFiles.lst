@@ -1,9 +1,12 @@
 com\everis\savingaccount\consumer\webclient.class
+com\everis\savingaccount\model\movements.class
+com\everis\savingaccount\repository\savingAccountRepository.class
+com\everis\savingaccount\Constants\Constants$Messages.class
+com\everis\savingaccount\model\savingAccount.class
+com\everis\savingaccount\Constants\Constants$Path.class
+com\everis\savingaccount\dto\message.class
+com\everis\savingaccount\Constants\Constants.class
 com\everis\savingaccount\controller\savingAccountController.class
 com\everis\savingaccount\map\customer.class
 com\everis\savingaccount\SavingAccountApplication.class
 com\everis\savingaccount\service\savingAccountService.class
-com\everis\savingaccount\model\movements.class
-com\everis\savingaccount\repository\savingAccountRepository.class
-com\everis\savingaccount\model\savingAccount.class
-com\everis\savingaccount\dto\message.class

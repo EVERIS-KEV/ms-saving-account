@@ -29,44 +29,38 @@ public class savingAccountController {
 	@Autowired
 	savingAccountService service;
 
-	@PostMapping("/save")
-	public Mono<Object> created(@RequestBody @Valid savingAccount model, BindingResult bindinResult) {
+	private Mono<Object> BindingResultErrors(BindingResult bindinResult){
 		String msg = "";
 
-		if (bindinResult.hasErrors()) {
-			for (int i = 0; i < bindinResult.getAllErrors().size(); i++) {
-				msg = bindinResult.getAllErrors().get(0).getDefaultMessage();
-			}
-			return Mono.just(new message(msg));
+		for (int i = 0; i < bindinResult.getAllErrors().size(); i++) {
+			msg = bindinResult.getAllErrors().get(0).getDefaultMessage();
 		}
+		return Mono.just(new message(msg));
+	}
+
+	@PostMapping("/save")
+	public Mono<Object> created(@RequestBody @Valid savingAccount model, BindingResult bindinResult) {
+
+		if (bindinResult.hasErrors()) 
+			return BindingResultErrors(bindinResult); 
 
 		return service.save(model);
 	}
 
 	@PostMapping("/movememts")
 	public Mono<Object> registedMovememts(@RequestBody @Valid movements model, BindingResult bindinResult) {
-		String msg = "";
 
-		if (bindinResult.hasErrors()) {
-			for (int i = 0; i < bindinResult.getAllErrors().size(); i++) {
-				msg = bindinResult.getAllErrors().get(0).getDefaultMessage();
-			}
-			return Mono.just(new message(msg));
-		}
+		if (bindinResult.hasErrors()) 
+			return BindingResultErrors(bindinResult); 
 
 		return service.saveMovements(model);
 	}
 
 	@PostMapping("/addTransfer")
 	public Mono<Object> addTransfer(@RequestBody @Valid movements model, BindingResult bindinResult) {
-		String msg = "";
 
-		if (bindinResult.hasErrors()) {
-			for (int i = 0; i < bindinResult.getAllErrors().size(); i++) {
-				msg = bindinResult.getAllErrors().get(0).getDefaultMessage();
-			}
-			return Mono.just(new message(msg));
-		}
+		if (bindinResult.hasErrors()) 
+			return BindingResultErrors(bindinResult); 
 
 		return service.saveTransfer(model);
 	}
@@ -90,5 +84,4 @@ public class savingAccountController {
 	public Flux<Object> findByCustomer(@PathVariable("id") String id) {
 		return service.getByCustomer(id);
 	}
-
 }
